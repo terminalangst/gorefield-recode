@@ -1,0 +1,59 @@
+// a
+import funkin.backend.utils.WindowUtils;
+import funkin.backend.system.framerate.Framerate;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
+import funkin.menus.BetaWarningState;
+
+import hxvlc.util.Handle;
+
+var redirectStates:Map<FlxState, String> = [
+    TitleState => "Title",
+    /*MainMenuState => "MainMenu",
+    StoryMenuState => "StoryMode",
+    FreeplayState => "Freeplay",*/
+];
+
+// week save data shit
+public static var weekProgress:Map<String, {song:String, weekMisses:Int, weekScore:Int, deaths:Int}> = [];
+
+// custom fps shit i borrowed from care & vechett
+public static var framerateTextStuff:TextField;
+public static var framerateSubText:TextField;
+public static var textFormat:TextFormat = new TextFormat(Paths.getFontName(Paths.font('garf.ttf')), 15, FlxColor.WHITE);
+
+function new() {
+    // fps stuff
+    Main.instance.addChild(framerateTextStuff = new TextField()).defaultTextFormat = textFormat;
+    Main.instance.addChild(framerateSubText = new TextField()).defaultTextFormat = textFormat;
+
+    // fps subtext stuff
+    framerateSubText.text = "\nGOREFIELD V2 RE-CODE BUILD";
+    framerateSubText.width = framerateSubText.textWidth + 10;
+    framerateTextStuff.x = framerateTextStuff.y = framerateSubText.x = framerateSubText.y = 17;
+
+    // debug stuff + window title
+    WindowUtils.winTitle = "GARFIELD & FRIENDS";
+    trace("Jon, I require Lasagna.");
+}
+
+function update() {
+    framerateTextStuff.text = "FPS: " + Framerate.fpsCounter.fpsNum.text + " - MEM: " + Framerate.memoryCounter.memoryText.text + Framerate.memoryCounter.memoryPeakText.text;
+    framerateTextStuff.width = framerateTextStuff.textWidth;
+    framerateSubText.width = framerateSubText.textWidth; 
+}
+
+function preStateSwitch() {
+    Handle.init([]);
+    Framerate.fpsCounter.fpsNum.visible = Framerate.fpsCounter.fpsLabel.visible = Framerate.memoryCounter.memoryText.visible = Framerate.memoryCounter.memoryPeakText.visible = Framerate.codenameBuildField.visible = false;
+
+    for (redirectState in redirectStates.keys()) 
+        if (Std.isOfType(FlxG.game._requestedState, redirectState)) 
+            FlxG.game._requestedState = new ModState(redirectStates.get(redirectState));
+}
+
+function destroy() {
+    Framerate.fpsCounter.fpsNum.visible = Framerate.fpsCounter.fpsLabel.visible = Framerate.memoryCounter.memoryText.visible = Framerate.memoryCounter.memoryPeakText.visible = Framerate.codenameBuildField.visible = true;
+    Main.instance.removeChild(framerateTextStuff);
+    Main.instance.removeChild(framerateSubText);
+}

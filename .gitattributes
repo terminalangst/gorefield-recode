@@ -1,0 +1,8 @@
+* text=auto * eol=lf
+
+*.txt text
+*.md text
+
+.ttf binary
+
+*.hscript linguist-language=Haxe

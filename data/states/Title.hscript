@@ -1,0 +1,58 @@
+// AAAAAAAAAAAGH!
+import flixel.util.FlxGradient;
+import funkin.backend.MusicBeatState;
+
+function new() {
+    if(FlxG.sound.music == null) {
+        CoolUtil.playMenuSong();
+    }
+}
+
+function create() {
+    particleAcceleration();
+    FlxG.camera.flash(FlxColor.WHITE, 2.5);
+    FlxG.camera.shake(0.0035, 0.5);
+
+    insert(2, house = new FlxSprite(512, 15)).loadGraphic(Paths.image('menus/house'));
+    insert(2, logo = new FlxSprite(-65, 276)).loadGraphic(Paths.image('menus/logo'));
+    house.scale.set(1, 1); logo.scale.set(0.8, 0.8);
+
+    insert(3, txt = new FlxText(65, logo.y, 0, "press enter to begin", 32)).font = Paths.font('garf.ttf');
+
+    insert(0, bg = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [FlxColor.fromRGB(17, 25, 33), FlxColor.fromRGB(17, 25, 33), FlxColor.fromRGB(17, 5, 33)]));
+    add(fg = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [FlxColor.TRANSPARENT, FlxColor.TRANSPARENT, FlxColor.fromRGB(17, 25, 33)])).alpha = 0.96;
+}
+
+function update(_:Float) {
+    if (controls.ACCEPT) {
+        CoolUtil.playMenuSFX(1);
+        MusicBeatState.skipTransOut = true;
+        FlxG.camera.fade(FlxColor.fromRGB(0, 0, 0), 1.5, false);
+        FlxTween.tween(FlxG.camera, {zoom: 2.5, angle: 15}, 1.5, {ease:FlxEase.quadOut});
+        new FlxTimer().start(1.5, function() {
+            FlxG.switchState(new MainMenuState());
+        });
+    }
+}
+
+function beatHit() {
+    house.scale.set(1, 1); logo.scale.set(0.8, 0.7);
+    FlxTween.tween(house.scale, {x: 0.95, y: 0.95}, 0.4, {ease: FlxEase.quadOut});
+    FlxTween.tween(logo.scale, {x: 0.75, y: 0.75}, 0.4, {ease: FlxEase.quadOut});
+}
+
+
+// this code is made by syrup/supergaymario, i just adjusted it to my liking
+function particleAcceleration() {
+    var randomScale:Float = FlxG.random.float(5, 10);
+    insert(1, particle = new FunkinSprite(FlxG.random.float(-750, 1500), 900).makeSolid(randomScale, randomScale, FlxColor.fromRGB(157, 255, 133))).alpha = 0.76;
+    particle.scrollFactor.set(0.75, 0.25);
+    particle.moves = true;
+    particle.acceleration.y = FlxG.random.float(-100, -250);
+    particle.angle = 20;
+    // delay
+    new FlxTimer().start(FlxG.random.int(0.75, 0.95), function()
+    {
+        particleAcceleration();
+    });
+}
