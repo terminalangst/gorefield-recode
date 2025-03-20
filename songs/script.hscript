@@ -1,0 +1,6 @@
+// fucking shader
+var ntsc:CustomShader = new CustomShader('ntsc');
+
+function create() {
+    camGame.addShader(ntsc);
+}

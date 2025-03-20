@@ -1,8 +1,12 @@
 // AAAAAAAAAAAGH!
 import flixel.util.FlxGradient;
+import flixel.effects.FlxFlicker;
 import funkin.backend.MusicBeatState;
+import funkin.backend.utils.DiscordUtil;
 
 function new() {
+    MusicBeatState.skipTransIn = true;
+
     if(FlxG.sound.music == null) {
         CoolUtil.playMenuSong();
     }
@@ -12,6 +16,7 @@ function create() {
     particleAcceleration();
     FlxG.camera.flash(FlxColor.WHITE, 2.5);
     FlxG.camera.shake(0.0035, 0.5);
+    DiscordUtil.changePresence('Jon, I require Lasagna.', "Title Screen");
 
     insert(2, house = new FlxSprite(512, 15)).loadGraphic(Paths.image('menus/house'));
     insert(2, logo = new FlxSprite(-65, 276)).loadGraphic(Paths.image('menus/logo'));
@@ -27,10 +32,12 @@ function update(_:Float) {
     if (controls.ACCEPT) {
         CoolUtil.playMenuSFX(1);
         MusicBeatState.skipTransOut = true;
-        FlxG.camera.fade(FlxColor.fromRGB(0, 0, 0), 1.5, false);
-        FlxTween.tween(FlxG.camera, {zoom: 2.5, angle: 15}, 1.5, {ease:FlxEase.quadOut});
+
+        FlxFlicker.flicker(txt, 1, 0.06, false);
+        FlxG.camera.flash(FlxColor.fromRGB(157, 255, 133), 1);
         new FlxTimer().start(1.5, function() {
-            FlxG.switchState(new MainMenuState());
+            FlxG.camera.fade(FlxColor.fromRGB(17, 5, 33), 0.625, false);
+            FlxTween.tween(FlxG.camera, {zoom: 2.5, angle: 15}, 1.5, {ease:FlxEase.quadIn, onComplete: (_) -> complete()});
         });
     }
 }
@@ -51,8 +58,11 @@ function particleAcceleration() {
     particle.acceleration.y = FlxG.random.float(-100, -250);
     particle.angle = 20;
     // delay
-    new FlxTimer().start(FlxG.random.int(0.75, 0.95), function()
-    {
+    new FlxTimer().start(FlxG.random.int(0.75, 0.95), function() {
         particleAcceleration();
     });
+}
+
+function complete() {
+    FlxG.switchState(new MainMenuState());
 }

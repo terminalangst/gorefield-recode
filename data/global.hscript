@@ -9,13 +9,16 @@ import hxvlc.util.Handle;
 
 var redirectStates:Map<FlxState, String> = [
     TitleState => "Title",
-    /*MainMenuState => "MainMenu",
-    StoryMenuState => "StoryMode",
+    MainMenuState => "MainMenu",
+    /*StoryMenuState => "StoryMode",
     FreeplayState => "Freeplay",*/
 ];
 
-// week save data shit
+// week save data shit, etc.
 public static var weekProgress:Map<String, {song:String, weekMisses:Int, weekScore:Int, deaths:Int}> = [];
+public static var curMenuSelected:Int = 0;
+public static var seenMenuCutscene:Bool = false;
+public static var selectedSomethin:Bool = false;
 
 // custom fps shit i borrowed from care & vechett
 public static var framerateTextStuff:TextField;

@@ -1,0 +1,218 @@
+// AAAA
+// flixel imports
+import flixel.util.FlxGradient;
+import flixel.effects.FlxFlicker;
+//backend imports
+import funkin.backend.utils.DiscordUtil;
+import funkin.backend.system.macros.GitCommitMacro;
+import funkin.backend.MusicBeatState;
+//menu imports
+import funkin.menus.ModSwitchMenu;
+import funkin.editors.EditorPicker;
+import funkin.options.OptionsMenu;
+import funkin.menus.credits.CreditsMain;
+
+//var options:Array<String> = [ 'story_mode', 'freeplay', 'options', 'credits' ];
+var options:Array<String> = CoolUtil.coolTextFile(Paths.txt("config/menuItems"));
+var optionText:Map<String, String> = [ 'story_mode' => "Be careful. One wrong move and you're gone.", 'freeplay' => "Sing along with Gorefield & friends!", 'options' => "You expected THESE options?", 'credits' => "...Self explanatory dude." ];
+var menuItems:FlxTypedGroup<FlxSprite>;
+var curSelected:Int = curMenuSelected;
+
+// fucking shader
+var shader:CustomShader = new CustomShader('gamma');
+var camShader:CustomShader = new CustomShader('ntsc');
+var heat:CustomShader = new CustomShader('heat');
+heat.time = 0; heat.speed = 1; 
+heat.strength = 1; 
+
+function new() {
+    if(FlxG.sound.music != null) {
+        CoolUtil.playMenuSong();
+    }
+}
+
+function create() {
+    PlayState.deathCounter = 0;
+    DiscordUtil.changePresence('Hi, Jon.', "Main Menu");
+    
+    insert(0, bg = new FlxSprite()).makeSolid(FlxG.width, FlxG.height, FlxColor.WHITE);
+    bg.color = FlxColor.fromRGB(17, 5, 33);
+    insert(1, fire = new FlxSprite()).frames = Paths.getSparrowAtlas('menus/mainmenu/fire');
+    fire.animation.addByPrefix("anim", "fire", 24, true);
+    fire.alpha = 0.23; fire.visible = false;
+    insert(2, gorefield = new FlxSprite(586, 40)).frames = Paths.getSparrowAtlas('menus/mainmenu/gorefield_menu');
+    gorefield.animation.addByPrefix('beat', 'MenuIdle', 24, false);
+    gorefield.animation.addByPrefix('idle', 'MenuIdle0000', 1); gorefield.animation.play('idle');
+    gorefield.animation.addByPrefix('WTF', 'JEJE', 24);
+    insert(2, logo = new FlxSprite(-356, 342)).loadGraphic(Paths.image('menus/logo'));
+    logo.scale.set(0.5, 0.5); logo.alpha = 0;
+
+    //FAKEFIELD !!!
+    add(fakefieldIntro = new FlxSprite()).frames = Paths.getSparrowAtlas('menus/mainmenu/garfield_menu_startup');
+    fakefieldIntro.animation.addByPrefix('anim', "GARFIELD", 24, false);
+    add(cneTxt = new FunkinText(1278, 20, 0, "press [tab] to switch mods\ncodename engine (" + GitCommitMacro.commitHash + ")", false)).setFormat(Paths.font('garf.ttf'), 16, FlxColor.WHITE, 'right');
+    cneTxt.alpha = 0;
+
+    logo.shader = shader;
+    
+    add(fg = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [FlxColor.TRANSPARENT, FlxColor.TRANSPARENT, FlxColor.BLACK])).alpha = 0.96;
+
+    add(txtBox = new FlxSprite(470, 720)).makeSolid(FlxG.width - 512, 80, FlxColor.BLACK);
+    txtBox.alpha = 0;
+    add(menuInfo = new FunkinText(480, 720, 0, "Please select.", 24, false)).setFormat(Paths.font('pixelart.ttf'), 24, FlxColor.WHITE, 'center');
+    
+    menuItems = new FlxTypedGroup();
+    add(menuItems);
+    gorefield.visible = menuItems.visible = false;
+    // menu item shit
+    for(i=>options in options) {
+        menuItems.add(menuItem = new FlxSprite(0, 0)).frames = Paths.getSparrowAtlas('menus/mainmenu/menu_' + options);
+        menuItem.animation.addByPrefix('idle', options + " basic", 24); menuItem.animation.addByPrefix('selected', options + " white", 24);
+		menuItem.animation.play('idle');
+		menuItem.updateHitbox();
+        menuItem.x = 520 - menuItem.width - (100 + (i*50)); menuItem.y = 100 + ((menuItem.ID = i) * 92.5);
+    }
+
+    //menu cutscene shit
+    if(!seenMenuCutscene) {
+		fakefieldIntro.animation.play("anim", false);
+        fakefieldIntro.animation.finishCallback = function () { 
+            seenMenuCutscene = true;
+            selectedSomethin = false;
+
+            changeItem(0);
+            remove(fakefieldIntro); 
+            gorefield.visible = logo.visible = menuItems.visible = true;
+            FlxTween.tween(logo, {x: -125, alpha: 1}, 0.6, {ease: FlxEase.quadInOut});
+            FlxTween.tween(cneTxt, {x: 982, alpha: 1}, 0.6, {ease: FlxEase.quadInOut});
+            FlxTween.tween(txtBox, {y: 620, alpha: 0.5}, 0.6, {ease: FlxEase.quadInOut});  
+            FlxTween.tween(menuInfo, {y: 645, alpha: 1}, 0.6, {ease: FlxEase.quadInOut});  
+        }
+    }
+    else {
+        selectedSomethin = false;
+
+        changeItem(0);
+        remove(fakefieldIntro); 
+        gorefield.visible = logo.visible = menuItems.visible = true;
+        FlxTween.tween(logo, {x: -125, alpha: 1}, 0.6, {ease: FlxEase.quadIn});
+        FlxTween.tween(cneTxt, {x: 982, alpha: 1}, 0.6, {ease: FlxEase.quadInOut});
+        FlxTween.tween(txtBox, {y: 620, alpha: 0.5}, 0.6, {ease: FlxEase.quadInOut});
+        FlxTween.tween(menuInfo, {y: 645, alpha: 1}, 0.6, {ease: FlxEase.quadInOut});
+    }
+}
+
+function update() {
+    if(controls.BACK) {
+        CoolUtil.playMenuSFX(2);
+        MusicBeatState.skipTransOut = true;
+
+        FlxG.camera.fade(FlxColor.WHITE, 0.625, false);
+        FlxG.camera.shake(0.0035, 1.5);
+        FlxTween.tween(FlxG.camera, {zoom: 2.5, angle: 15}, 1.5, {ease:FlxEase.quadIn, onComplete: (_) -> complete()});
+    }
+
+    if(controls.SWITCHMOD) {
+        persistentUpdate = !(persistentDraw= true);
+        openSubState(new ModSwitchMenu());
+    }
+
+    if(FlxG.keys.justPressed.SEVEN) {
+        persistentUpdate = !(persistentDraw = true);
+        openSubState(new EditorPicker());
+    }
+
+    if(controls.UP_P || controls.DOWN_P) changeItem(controls.UP_P ? -1 : 1);
+    if(FlxG.mouse.wheel != 0) changeItem(-FlxG.mouse.wheel);
+    if(controls.ACCEPT) {
+        CoolUtil.playMenuSFX(1);
+        
+        FlxFlicker.flicker(menuItems.members[curSelected], 1, 0.06, false);
+        new FlxTimer().start(1, function() {
+            selectItem();
+        });
+    }
+}
+
+function beatHit() {
+    if (curBeat % 2 == 0) {
+        gorefield.animation.play('beat', true);
+    }
+
+    logo.scale.set(0.5, 0.5); gorefield.y = 40; //gorefield.scale.set(1, 1); 
+    FlxTween.tween(logo.scale, {x: 0.48, y: 0.48}, 0.4, {ease: FlxEase.quadOut});
+    //FlxTween.tween(gorefield.scale, {x: 0.98, y: 0.95}, 0.4, {ease: FlxEase.quadOut});
+    FlxTween.tween(gorefield, {y: 20}, 0.4, {ease: FlxEase.quadOut});
+}
+
+function destroy() {
+    FlxG.camera.bgColor = FlxColor.BLACK;
+}
+
+function complete() {
+    FlxG.switchState(new TitleState());
+}
+
+function changeItem(change:Int = 0) {
+    if(!selectedSomethin) {
+        curSelected = FlxMath.wrap(curSelected + change, 0, menuItems.length-1);
+
+        CoolUtil.playMenuSFX(0);
+    
+        menuItems.forEach(function(item:FlxSprite) {
+            FlxTween.cancelTweensOf(item);
+            item.animation.play(item.ID == curSelected ? 'selected' : 'idle');
+    
+            item.updateHitbox();
+    
+            if (item.ID == curSelected)
+                FlxTween.tween(item, {x: 580 - item.width + 50}, (Conductor.stepCrochet / 1000), {ease: FlxEase.quadInOut});
+            else
+                FlxTween.tween(item, {x: 520 - item.width}, (Conductor.stepCrochet / 1000) * 1.5, {ease: FlxEase.circOut});
+        });
+    
+        menuInfo.text = optionText.get(options[curSelected]);
+    }
+}
+
+function selectItem() {
+    selectedSomethin = true;
+
+    switch(options[curSelected]) {
+        case 'story_mode':
+            MusicBeatState.skipTransIn = MusicBeatState.skipTransOut = true;
+            remove(logo);
+            menuItems.visible = false;
+            remove(cneTxt);
+
+        new FlxTimer().start(1, function () {
+            FlxTween.tween(txtBox, {y: 720, alpha: 0}, 0.6, {ease: FlxEase.quadInOut});
+            FlxTween.tween(menuInfo, {y: 720, alpha: 0}, 0.6, {ease: FlxEase.quadInOut});
+        });
+
+            FlxG.camera.flash(FlxColor.RED, 0.6);
+            bg.color = 0xff80261f;
+            FlxTween.tween(fg, {alpha: .5}, 3.2);
+            
+            FlxG.sound.music.stop();
+            FlxG.sound.play(Paths.sound('menu/mainmenu/goodluck'));
+            fire.animation.play('anim'); fire.visible = true;
+            gorefield.animation.play('WTF'); gorefield.x = 250;
+            menuInfo.text = "Good luck, again be careful."; menuInfo.color = FlxColor.RED;
+
+            FlxG.camera.addShader(camShader); FlxG.camera.addShader(heat);
+            gorefield.shader = shader;
+
+            new FlxTimer().start(2, function() {
+                FlxG.camera.fade(FlxColor.RED, 3.2, false, function() {
+                    FlxG.switchState(new StoryMenuState());
+                });
+            });
+        case 'freeplay':
+            FlxG.switchState(new FreeplayState());
+        case 'options':
+            FlxG.switchState(new OptionsMenu());
+        case 'credits':
+            FlxG.switchState(new CreditsMain());
+    }
+}
