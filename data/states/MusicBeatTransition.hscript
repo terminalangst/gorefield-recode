@@ -1,4 +1,4 @@
-// AAAAAAAAAGH!
+// AAAAAAAAAGH! it's actually embarassing that i forgot to credit care for this, I'M SORRY CARE IF YOU'RE READING THIS
 
 function create() {
     transitionTween.cancel();
