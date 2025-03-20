@@ -7,7 +7,7 @@ import funkin.backend.utils.DiscordUtil;
 function new() {
     MusicBeatState.skipTransIn = true;
 
-    if(FlxG.sound.music == null) {
+    if(FlxG.sound.music == null || FlxG.sound.music !=null) {
         CoolUtil.playMenuSong();
     }
 }

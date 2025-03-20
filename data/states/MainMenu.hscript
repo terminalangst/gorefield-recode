@@ -12,9 +12,8 @@ import funkin.editors.EditorPicker;
 import funkin.options.OptionsMenu;
 import funkin.menus.credits.CreditsMain;
 
-//var options:Array<String> = [ 'story_mode', 'freeplay', 'options', 'credits' ];
 var options:Array<String> = CoolUtil.coolTextFile(Paths.txt("config/menuItems"));
-var optionText:Map<String, String> = [ 'story_mode' => "Be careful. One wrong move and you're gone.", 'freeplay' => "Sing along with Gorefield & friends!", 'options' => "You expected THESE options?", 'credits' => "...Self explanatory dude." ];
+var optionText:Map<String, String> = [ 'story_mode' => "Be careful. One wrong move and you're gone.", 'freeplay' => "Sing along with Gorefield n' friends!", 'options' => "You expected THESE options?", 'credits' => "...Self explanatory dude." ];
 var menuItems:FlxTypedGroup<FlxSprite>;
 var curSelected:Int = curMenuSelected;
 
@@ -127,6 +126,7 @@ function update() {
     if(controls.ACCEPT) {
         CoolUtil.playMenuSFX(1);
         
+        if(options[curSelected] == 'story_mode') menuInfo.text = "...";
         FlxFlicker.flicker(menuItems.members[curSelected], 1, 0.06, false);
         new FlxTimer().start(1, function() {
             selectItem();
