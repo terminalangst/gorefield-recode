@@ -25,7 +25,7 @@ heat.time = 0; heat.speed = 1.45;
 heat.strength = 1.65; 
 
 function new() {
-    if(FlxG.sound.music != null) {
+    if(FlxG.sound.music == null || FlxG.sound.music != null) {
         CoolUtil.playMenuSong();
     }
 }
