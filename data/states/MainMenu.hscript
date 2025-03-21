@@ -21,8 +21,8 @@ var curSelected:Int = curMenuSelected;
 var shader:CustomShader = new CustomShader('gamma');
 var camShader:CustomShader = new CustomShader('ntsc');
 var heat:CustomShader = new CustomShader('heat');
-heat.time = 0; heat.speed = 1; 
-heat.strength = 1; 
+heat.time = 0; heat.speed = 1.45; 
+heat.strength = 1.65; 
 
 function new() {
     if(FlxG.sound.music != null) {
@@ -102,35 +102,38 @@ function create() {
 }
 
 function update() {
-    if(controls.BACK) {
-        CoolUtil.playMenuSFX(2);
-        MusicBeatState.skipTransOut = true;
+    if(!selectedSomethin) {
+        if(controls.BACK) {
+            CoolUtil.playMenuSFX(2);
+            MusicBeatState.skipTransOut = true;
 
-        FlxG.camera.fade(FlxColor.WHITE, 0.625, false);
-        FlxG.camera.shake(0.0035, 1.5);
-        FlxTween.tween(FlxG.camera, {zoom: 2.5, angle: 15}, 1.5, {ease:FlxEase.quadIn, onComplete: (_) -> complete()});
-    }
+            FlxG.camera.fade(FlxColor.WHITE, 0.625, false);
+            FlxG.camera.shake(0.0035, 1.5);
+            FlxTween.tween(FlxG.camera, {zoom: 2.5, angle: 15}, 1.5, {ease:FlxEase.quadIn, onComplete: (_) -> complete()});
+        }
 
-    if(controls.SWITCHMOD) {
-        persistentUpdate = !(persistentDraw= true);
-        openSubState(new ModSwitchMenu());
-    }
+        if(controls.SWITCHMOD) {
+            persistentUpdate = !(persistentDraw= true);
+            openSubState(new ModSwitchMenu());
+        }
 
-    if(FlxG.keys.justPressed.SEVEN) {
-        persistentUpdate = !(persistentDraw = true);
-        openSubState(new EditorPicker());
-    }
+        if(FlxG.keys.justPressed.SEVEN) {
+            persistentUpdate = !(persistentDraw = true);
+            openSubState(new EditorPicker());
+        }
 
-    if(controls.UP_P || controls.DOWN_P) changeItem(controls.UP_P ? -1 : 1);
-    if(FlxG.mouse.wheel != 0) changeItem(-FlxG.mouse.wheel);
-    if(controls.ACCEPT) {
-        CoolUtil.playMenuSFX(1);
+        if(controls.UP_P || controls.DOWN_P) changeItem(controls.UP_P ? -1 : 1);
+        if(FlxG.mouse.wheel != 0) changeItem(-FlxG.mouse.wheel);
+        if(controls.ACCEPT) {
+            selectedSomethin = true;
+            CoolUtil.playMenuSFX(1);
         
-        if(options[curSelected] == 'story_mode') menuInfo.text = "...";
-        FlxFlicker.flicker(menuItems.members[curSelected], 1, 0.06, false);
-        new FlxTimer().start(1, function() {
-            selectItem();
-        });
+            if(options[curSelected] == 'story_mode') menuInfo.text = "...";
+            FlxFlicker.flicker(menuItems.members[curSelected], 1, 0.06, false);
+            new FlxTimer().start(1, function() {
+                selectItem();
+            });
+        }
     }
 }
 
@@ -176,7 +179,7 @@ function changeItem(change:Int = 0) {
 }
 
 function selectItem() {
-    selectedSomethin = true;
+    //selectedSomethin = true;
 
     switch(options[curSelected]) {
         case 'story_mode':

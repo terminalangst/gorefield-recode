@@ -1,0 +1,14 @@
+<!DOCTYPE codename-engine-character>
+<character sprite="jon-player" flipX="true" isPlayer="true" icon="sprite-icon" gameOverChar="jon-dead">
+	<anim name="idle" anim="JON IDLE" x="0" y="0" fps="24" loop="false"/>
+	<anim name="singUP" anim="JON UP0" x="10" y="20" fps="24" loop="false"/>
+	<anim name="singLEFT" anim="JON LEFT0" x="35" y="-15" fps="24" loop="false"/>
+	<anim name="singRIGHT" anim="JON RIGHT0" x="8" y="7" fps="24" loop="false"/>
+	<anim name="singDOWN" anim="JON DOWN0" x="30" y="-36" fps="24" loop="false"/>
+	<anim name="singUPmiss" anim="JON MISS UP0" x="12" y="39" fps="24" loop="false"/>
+	<anim name="singLEFTmiss" anim="JON MISS LEFT0" x="37" y="-10" fps="24" loop="false"/>
+	<anim name="singRIGHTmiss" anim="JON MISS RIGHT0" x="-24" y="5" fps="24" loop="false"/>
+	<anim name="singDOWNmiss" anim="JON MISS DOWN0" x="48" y="-45" fps="24" loop="false"/>
+	<anim name="reload" anim="JON RECARGA0" x="10" y="-20" fps="24" loop="false"/>
+	<anim name="shoot" anim="JON DISPARO0" x="-4" y="214" fps="24" loop="false"/>
+</character>
