@@ -1,6 +1,20 @@
 // fucking shader
 var ntsc:CustomShader = new CustomShader('ntsc');
 
+doIconBop = false;
+
+
 function create() {
     camGame.addShader(ntsc);
+    camHUD.fade(FlxColor.BLACK, 0, false);
 }
+
+function onSongStart() {
+    camHUD.fade(FlxColor.BLACK, (Conductor.stepCrochet / 1000) * 64, true);
+}
+
+function postUpdate() allowGitaroo = false; //DIE GITAROO MAN PAUSE MENU.
+function onStartCountdown(garf) FlxG.cameras.add(countdownCamera = new FlxCamera(), false).bgColor = FlxColor.TRANSPARENT;
+function onCountdown(garf) garf.scale = .32;
+function onPostCountdown(garf) garf.sprite.camera = countdownCamera;
+function onDadHit(garf) garf.healthGain = 0.018;

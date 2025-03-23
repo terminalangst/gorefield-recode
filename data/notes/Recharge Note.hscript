@@ -1,0 +1,25 @@
+// ARGH.
+import funkin.options.Options;
+
+function onNoteCreation(garf) {
+    if(garf.noteType != "Recharge Note") return;
+    garf.cancel(true);
+
+    garf.note.frames = Paths.getFrames(garf.noteSprite);
+    
+    garf.note.scale.set(garf.noteScale, garf.noteScale);
+    garf.note.antialiasing = Options.antialiasing;
+}
+
+function onPlayerHit(garf)
+    if (garf.noteType == "Recharge Note") {
+        garf.showSplash = false;
+        garf.preventStrumGlow();
+
+        boyfriend.playAnim("reload", true);
+        garf.preventAnim();
+        health += .02;
+    }
+
+function onPlayerMiss(garf) 
+    if (garf.noteType == "Recharge Note") {health = 0; event.cancel(true);}

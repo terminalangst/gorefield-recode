@@ -1,9 +1,11 @@
-// a
+// a also funkin backend and menu imports
 import funkin.backend.utils.WindowUtils;
 import funkin.backend.system.framerate.Framerate;
+import funkin.menus.BetaWarningState;
+// openfl imports
 import openfl.text.TextField;
 import openfl.text.TextFormat;
-import funkin.menus.BetaWarningState;
+import openfl.display.Sprite;
 
 import hxvlc.util.Handle;
 
@@ -26,7 +28,10 @@ public static var framerateSubText:TextField;
 public static var textFormat:TextFormat = new TextFormat(Paths.getFontName(Paths.font('garf.ttf')), 15, FlxColor.WHITE);
 
 function new() {
-    // fps stuff
+    // fps stuff, again thank you vechett & care
+    Main.instance.addChild(sprite = new Sprite()).graphics.beginFill(0x000000);
+    sprite.graphics.drawRect(0, 0, 100, 100); sprite.graphics.endFill();
+    sprite.alpha = 0.3; sprite.x = sprite.y = 15;
     Main.instance.addChild(framerateTextStuff = new TextField()).defaultTextFormat = textFormat;
     Main.instance.addChild(framerateSubText = new TextField()).defaultTextFormat = textFormat;
 
@@ -41,9 +46,13 @@ function new() {
 }
 
 function update() {
-    framerateTextStuff.text = "FPS: " + Framerate.fpsCounter.fpsNum.text + " - MEM: " + Framerate.memoryCounter.memoryText.text + Framerate.memoryCounter.memoryPeakText.text;
-    framerateTextStuff.width = framerateTextStuff.textWidth;
-    framerateSubText.width = framerateSubText.textWidth; 
+    framerateTextStuff.text = "FPS: " + Framerate.fpsCounter.fpsNum.text + " || MEM: " + Framerate.memoryCounter.memoryText.text + Framerate.memoryCounter.memoryPeakText.text;
+    framerateTextStuff.width = framerateTextStuff.textWidth + 10;
+    framerateTextStuff.height = framerateTextStuff.textHeight + 25;
+    framerateSubText.width = framerateSubText.textWidth;
+    setSize(framerateTextStuff.width, framerateTextStuff.height);
+    
+    if(FlxG.keys.justPressed.F5) FlxG.resetState();
 }
 
 function preStateSwitch() {
@@ -59,4 +68,11 @@ function destroy() {
     Framerate.fpsCounter.fpsNum.visible = Framerate.fpsCounter.fpsLabel.visible = Framerate.memoryCounter.memoryText.visible = Framerate.memoryCounter.memoryPeakText.visible = Framerate.codenameBuildField.visible = true;
     Main.instance.removeChild(framerateTextStuff);
     Main.instance.removeChild(framerateSubText);
+}
+
+function setSize(width, height) {
+    sprite.graphics.clear();
+    sprite.graphics.beginFill(0x000000);
+    sprite.graphics.drawRect(0, 0, width, height);
+    sprite.graphics.endFill();
 }

@@ -17,12 +17,12 @@ var optionText:Map<String, String> = [ 'story_mode' => "Be careful. One wrong mo
 var menuItems:FlxTypedGroup<FlxSprite>;
 var curSelected:Int = curMenuSelected;
 
-// fucking shader
+// fucking shader(s)
 var shader:CustomShader = new CustomShader('gamma');
 var camShader:CustomShader = new CustomShader('ntsc');
 var heat:CustomShader = new CustomShader('heat');
 heat.time = 0; heat.speed = 1.45; 
-heat.strength = 1.65; 
+heat.strength = 1.65;
 
 function new() {
     if(FlxG.sound.music == null || FlxG.sound.music != null) {
@@ -74,6 +74,7 @@ function create() {
 
     //menu cutscene shit
     if(!seenMenuCutscene) {
+        selectedSomethin = true;
 		fakefieldIntro.animation.play("anim", false);
         fakefieldIntro.animation.finishCallback = function () { 
             seenMenuCutscene = true;
@@ -208,7 +209,8 @@ function selectItem() {
 
             new FlxTimer().start(2, function() {
                 FlxG.camera.fade(FlxColor.RED, 3.2, false, function() {
-                    FlxG.switchState(new StoryMenuState());
+                    PlayState.loadSong('the great punishment', "hard");
+                    FlxG.switchState(new PlayState());
                 });
             });
         case 'freeplay':

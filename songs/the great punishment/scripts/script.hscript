@@ -1,0 +1,24 @@
+// AGH!
+function postCreate() {
+    stage.stageSprites["red"].alpha = 0;
+}
+
+function stepHit(_:Int) {
+    switch(_) {
+        case 256:
+            defaultCamZoom = 1.2;
+        case 384:
+            defaultCamZoom = 1;
+        case 496:
+            FlxTween.tween(camGame, {zoom: 1.5}, (Conductor.stepCrochet / 1000) * 15, {ease: FlxEase.quadIn, onComplete: function(tween:FlxTween) {defaultCamZoom = 1.5;}});
+        case 512:
+            defaultCamZoom = 1;
+            camGame.flash(FlxColor.RED, 0.6);
+            FlxTween.tween(stage.stageSprites["red"], {alpha: 0.4}, 0.87, {ease: FlxEase.quadInOut});
+        case 752:
+            defaultCamZoom = 1.35;
+        case 768:
+            FlxTween.tween(camGame, {zoom: 1.5}, (Conductor.stepCrochet / 1000) * 15, {ease: FlxEase.quadIn, onComplete: function(tween:FlxTween) {defaultCamZoom = 1.5;}});
+            FlxTween.tween(stage.stageSprites["red"], {alpha: 0}, 0.87, {ease: FlxEase.quadInOut});
+    }
+}

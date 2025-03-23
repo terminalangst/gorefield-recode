@@ -1,0 +1,8 @@
+<!DOCTYPE codename-engine-stage>
+<stage zoom="1.5" folder="stages/livingroom/" middlescroll="true">
+    <sprite x="0" y="0" alpha="1" scale="1" sprite="bg" name="background"/>
+    <dad/>
+    <bf/>
+    <solid name="red" x="0" width="1615" height="970" color="0xFF0000" scrollx="0" scrolly="0"/>
+    <sprite x="0" y="0" alpha="0.5" scrollx="0" scrolly="0" sprite="vignette" name="vignette" cameras="camHUD"/>
+</stage>
