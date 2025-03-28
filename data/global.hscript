@@ -25,10 +25,11 @@ public static var selectedSomethin:Bool = false;
 // custom fps shit i borrowed from care & vechett
 public static var framerateTextStuff:TextField;
 public static var framerateSubText:TextField;
-public static var textFormat:TextFormat = new TextFormat(Paths.getFontName(Paths.font('garf.ttf')), 15, FlxColor.WHITE);
+public static var textFormat:TextFormat;
 
 function new() {
     // fps stuff, again thank you vechett & care
+    textFormat = new TextFormat(Paths.getFontName(Paths.font('garf.ttf')), 15, FlxColor.WHITE);
     Main.instance.addChild(sprite = new Sprite()).graphics.beginFill(0x000000);
     sprite.graphics.drawRect(0, 0, 100, 100); sprite.graphics.endFill();
     sprite.alpha = 0.3; sprite.x = sprite.y = 15;
@@ -68,6 +69,7 @@ function destroy() {
     Framerate.fpsCounter.fpsNum.visible = Framerate.fpsCounter.fpsLabel.visible = Framerate.memoryCounter.memoryText.visible = Framerate.memoryCounter.memoryPeakText.visible = Framerate.codenameBuildField.visible = true;
     Main.instance.removeChild(framerateTextStuff);
     Main.instance.removeChild(framerateSubText);
+    Main.instance.removeChild(sprite);
 }
 
 function setSize(width, height) {

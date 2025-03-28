@@ -5,7 +5,9 @@ function onNoteCreation(garf) {
     if(garf.noteType != "Recharge Note") return;
     garf.cancel(true);
 
-    garf.note.frames = Paths.getFrames(garf.noteSprite);
+    garf.note.frames = Paths.getFrames('game/notes/types/Recharge Note');
+    garf.note.animation.addByPrefix('anim', 'RECARGA0', 24, true);
+    garf.note.animation.play('anim');
     
     garf.note.scale.set(garf.noteScale, garf.noteScale);
     garf.note.antialiasing = Options.antialiasing;

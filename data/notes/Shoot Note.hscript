@@ -5,7 +5,9 @@ function onNoteCreation(garf) {
     if(garf.noteType != "Shoot Note") return;
     garf.cancel(true);
 
-    garf.note.frames = Paths.getFrames(garf.noteSprite);
+    garf.note.frames = Paths.getFrames('game/notes/types/Shoot Note');
+    garf.note.animation.addByPrefix('anim', 'gun note', 24, true);
+    garf.note.animation.play('anim');
 
     garf.note.scale.set(garf.noteScale, garf.noteScale);
     garf.note.antialiasing = Options.antialiasing;
@@ -19,6 +21,7 @@ function onPlayerHit(garf)
         boyfriend.playAnim("shoot", true);
         dad.playAnim("hit", true);
         garf.preventAnim();
+        camGame.shake(0.003, 0.6);
     }
 
 function onPlayerMiss(garf) 

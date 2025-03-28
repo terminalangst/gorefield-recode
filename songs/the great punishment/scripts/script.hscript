@@ -1,24 +1,47 @@
 // AGH!
 function postCreate() {
     stage.stageSprites["red"].alpha = 0;
+    add(txt = new FunkinText(0, 88, 0, "BACK")).setFormat(Paths.font('garf.ttf'), 24, FlxColor.WHITE, 'center');
+    insert(0, bar1 = new FlxSprite(0, 725)).makeSolid(FlxG.width, 200, FlxColor.BLACK);
+    insert(0, bar2 = new FlxSprite(0, -200)).makeSolid(FlxG.width, 200, FlxColor.BLACK);
+    for(e in [txt, bar1, bar2]) { e.screenCenter(FlxAxes.X); e.cameras = [camHUD]; e.alpha = 0;}
+}
+
+function onSongStart() {
+    //camHUD.fade(FlxColor.BLACK, (Conductor.stepCrochet / 1000) * 128, true);
 }
 
 function stepHit(_:Int) {
     switch(_) {
-        case 256:
-            defaultCamZoom = 1.2;
-        case 384:
-            defaultCamZoom = 1;
         case 496:
             FlxTween.tween(camGame, {zoom: 1.5}, (Conductor.stepCrochet / 1000) * 15, {ease: FlxEase.quadIn, onComplete: function(tween:FlxTween) {defaultCamZoom = 1.5;}});
         case 512:
-            defaultCamZoom = 1;
             camGame.flash(FlxColor.RED, 0.6);
             FlxTween.tween(stage.stageSprites["red"], {alpha: 0.4}, 0.87, {ease: FlxEase.quadInOut});
-        case 752:
-            defaultCamZoom = 1.35;
         case 768:
-            FlxTween.tween(camGame, {zoom: 1.5}, (Conductor.stepCrochet / 1000) * 15, {ease: FlxEase.quadIn, onComplete: function(tween:FlxTween) {defaultCamZoom = 1.5;}});
             FlxTween.tween(stage.stageSprites["red"], {alpha: 0}, 0.87, {ease: FlxEase.quadInOut});
+        case 1136:
+            FlxTween.tween(bar1, {alpha: 0.74, y: 587}, 0.6, {ease: FlxEase.easeOut});
+            FlxTween.tween(bar2, {alpha: 0.74, y: -43}, 0.6, {ease: FlxEase.easeOut });
+            FlxTween.tween(txt, {alpha: 1, y: 176}, 0.6, {ease: FlxEase.easeOut });
+            coolText("Bullets,");
+        case 1144:
+            coolText("Bullets, don't");
+        case 1148:
+            coolText("Bullets, don't work");
+        case 1152:
+            coolText("Bullets, don't work Jon.");
+        case 1159:
+            FlxTween.tween(txt, {alpha: 0, y: -25, angle: 15}, 0.6, {ease: FlxEase.quadIn, onComplete: function(tween:FlxTween) {remove(txt);}});
+            FlxTween.tween(bar1, {alpha: 0, y: 725}, 0.6, {ease: FlxEase.quadIn, onComplete: function(tween:FlxTween) {remove(bar1);}});
+            FlxTween.tween(bar2, {alpha: 0, y: -200}, 0.6, {ease: FlxEase.quadIn, onComplete: function(tween:FlxTween) {remove(bar2);}});
+        case 1280:
+            camGame.visible = false;
+            camHUD.visible = false;
     }
+}
+
+function coolText(text:String) {
+    txt.text = text;
+    txt.screenCenter(FlxAxes.X);
 }

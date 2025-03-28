@@ -4,3 +4,8 @@ function postCreate() {
     for (strum in cpuStrums) strum.visible = false;
     for (playerStrum in playerStrums) playerStrum.x = ((FlxG.width/2) - (Note.swagWidth * 2)) + (Note.swagWidth * playerStrums.members.indexOf(playerStrum));
 }
+
+function onCameraMove(garf) {
+    FlxTween.cancelTweensOf(PlayState.instance.camFollow);
+    defaultCamZoom = curCameraTarget == 0 ? 1 : 1.35;
+}
