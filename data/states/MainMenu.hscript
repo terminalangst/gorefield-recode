@@ -19,7 +19,7 @@ var curSelected:Int = curMenuSelected;
 
 // fucking shader(s)
 var shader:CustomShader = new CustomShader('gamma');
-var camShader:CustomShader = new CustomShader('ntsc');
+//var camShader:CustomShader = new CustomShader('ntsc');
 var heat:CustomShader = new CustomShader('heat');
 heat.time = 0; heat.speed = 1.45; 
 heat.strength = 1.65;
@@ -204,7 +204,7 @@ function selectItem() {
             gorefield.animation.play('WTF'); gorefield.x = 250;
             menuInfo.text = "Good luck, again be careful."; menuInfo.color = FlxColor.RED;
 
-            FlxG.camera.addShader(camShader); FlxG.camera.addShader(heat);
+            /*FlxG.camera.addShader(camShader);*/ FlxG.camera.addShader(heat);
             gorefield.shader = shader;
 
             new FlxTimer().start(2, function() {

@@ -1,11 +1,11 @@
 // fucking shader
-var ntsc:CustomShader = new CustomShader('ntsc');
+//var ntsc:CustomShader = new CustomShader('ntsc');
 
 doIconBop = false;
 camZooming = true;
 
 function create() {
-    camGame.addShader(ntsc);
+    //camGame.addShader(ntsc);
     //camHUD.fade(FlxColor.BLACK, 0, false);
 }
 

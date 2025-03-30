@@ -21,7 +21,7 @@ function onPlayerHit(garf)
         boyfriend.playAnim("shoot", true);
         dad.playAnim("hit", true);
         garf.preventAnim();
-        camGame.shake(0.003, 0.6);
+        camGame.shake(0.005, 0.6);
     }
 
 function onPlayerMiss(garf) 
